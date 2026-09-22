@@ -1,4 +1,4 @@
-#Skapa nya branches för varje uppdatering, skapa egna delar
+# Skapa nya branches för varje uppdatering, skapa egna delar, stäng branches när tillagd i branch main
 
 index.html = startsida
 
