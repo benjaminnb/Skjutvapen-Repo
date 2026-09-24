@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weapon Arsenal</title>
+  <style>
+    :root {
+      --bg: #0b090b;
+      --bg-2: #120d12;
+      --panel: #171116;
+      --panel-two: #211720;
+      --line: #3a2933;
+      --text: #f0e8dc;
+      --muted: #aa9da2;
+      --accent: #b58a55;
+      --accent-strong: #d0ad7a;
+      --blood: #6e2632;
+      --shadow: rgba(0, 0, 0, 0.48);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: Georgia, "Times New Roman", serif;
+      background:
+        radial-gradient(circle at 50% -10%, rgba(110, 38, 50, 0.20), transparent 38rem),
+        linear-gradient(180deg, var(--bg) 0%, #090709 100%);
+      color: var(--text);
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      padding: 32px 20px 80px;
+    }
+
+    .page {
+      width: min(1200px, 100%);
+      background: rgba(11, 9, 11, 0.92);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 18px 55px var(--shadow);
+      overflow: hidden;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 18px 28px;
+      background: rgba(11, 9, 11, 0.92);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      font-size: clamp(1.2rem, 2vw, 2rem);
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-strong);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .nav a {
+      color: var(--muted);
+      text-decoration: none;
+      opacity: 0.9;
+      font-size: 0.95rem;
+      transition: color 0.2s ease, opacity 0.2s ease;
+    }
+
+    .nav a:hover {
+      color: var(--accent-strong);
+      opacity: 1;
+    }
+
+    main {
+      padding: 28px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.4fr 0.8fr;
+      gap: 26px;
+      align-items: stretch;
+      margin-bottom: 28px;
+    }
+
+    .panel {
+      background: linear-gradient(180deg, rgba(23, 17, 22, 0.96), rgba(33, 23, 32, 0.96));
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    .feature {
+      padding: 26px;
+    }
+
+    .feature h1 {
+      margin: 0 0 18px;
+      font-size: clamp(2rem, 4vw, 4rem);
+      line-height: 1.04;
+      letter-spacing: -0.04em;
+    }
+
+    .feature p {
+      margin: 0 0 24px;
+      line-height: 1.7;
+      color: var(--muted);
+      max-width: 62ch;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button,
+    .toggle-btn {
+      appearance: none;
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 22px;
+      background: linear-gradient(180deg, var(--accent), var(--accent-strong));
+      color: #111827;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      box-shadow: 0 10px 24px rgba(251, 191, 36, 0.25);
+    }
+
+    .button:hover,
+    .toggle-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .button.secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--line);
+      box-shadow: none;
+    }
+
+    .stats-card {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 100%;
+    }
+
+    .image-box {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(244, 63, 94, 0.12));
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(226, 232, 240, 0.85);
+      font-size: 1.1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+
+    .image-box::before {
+      content: "Weapon image";
+    }
+
+    .specs {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+
+    .specs h2 {
+      margin: 0 0 14px;
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(120px, 1fr));
+      gap: 12px;
+    }
+
+    .stat {
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: rgba(148, 163, 184, 0.06);
+      border: 1px solid rgba(148, 163, 184, 0.12);
+    }
+
+    .stat label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .stat span {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .content {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 26px;
+    }
+
+    .weapon-list {
+      padding: 22px;
+    }
+
+    .list-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .list-header h3 {
+      margin: 0;
+      font-size: clamp(1.3rem, 2vw, 2rem);
+    }
+
+    .toggle-btn {
+      padding: 10px 16px;
+      font-size: 0.85rem;
+    }
+
+    .weapon-items {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 12px;
+    }
+
+    .weapon-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--line);
+      color: var(--text);
+    }
+
+    .weapon-item strong {
+      display: block;
+      font-size: 1.02rem;
+    }
+
+    .weapon-item span {
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .weapon-item .chip {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(251, 191, 36, 0.12);
+      border: 1px solid rgba(251, 191, 36, 0.2);
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .info-box {
+      padding: 22px;
+    }
+
+    .info-box h3 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      font-size: 1.2rem;
+    }
+
+    .info-box p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .mini-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .mini-list li {
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: rgba(148, 163, 184, 0.05);
+      border: 1px solid rgba(148, 163, 184, 0.12);
+      color: var(--text);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 860px) {
+      .hero,
+      .content {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="brand">Arsenal</div>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#">Overview</a>
+        <a href="#">Weapons</a>
+        <a href="#">Specifications</a>
+        <a href="#">Field Notes</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <article class="panel feature">
+          <h1>Modern firearms portfolio</h1>
+          <p>
+            A compact archive of weapon systems designed for clear comparison. Replace the empty image slot,
+            update the measurements, and expand the roster with as many entries as needed for your own reference.
+          </p>
+          <div class="cta-row">
+            <button class="button" type="button">View catalog</button>
+            <button class="button secondary" type="button">Compare specs</button>
+          </div>
+        </article>
+
+        <aside class="panel stats-card" aria-label="Selected weapon stats">
+          <div class="image-box" aria-label="Weapon image area"></div>
+
+          <div class="specs">
+            <h2>Weapon stats</h2>
+            <div class="stats-grid">
+              <div class="stat">
+                <label>Range</label>
+                <span>500 m</span>
+              </div>
+              <div class="stat">
+                <label>Ammunition</label>
+                <span>7.62 mm</span>
+              </div>
+              <div class="stat">
+                <label>Rate</label>
+                <span>650 rpm</span>
+              </div>
+              <div class="stat">
+                <label>Weight</label>
+                <span>3.4 kg</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="content">
+        <article class="panel weapon-list">
+          <div class="list-header">
+            <h3>Weapon list</h3>
+            <button class="toggle-btn" id="toggleList" type="button" aria-expanded="false">Show list</button>
+          </div>
+
+          <ul class="weapon-items" id="weaponList">
+            <li class="weapon-item"><div><strong>AK-47</strong><span>Assault rifle</span></div><span class="chip">Legacy</span></li>
+            <li class="weapon-item"><div><strong>M4A1</strong><span>Carbine</span></div><span class="chip">Modern</span></li>
+            <li class="weapon-item"><div><strong>Glock 17</strong><span>Pistol</span></div><span class="chip">Compact</span></li>
+            <li class="weapon-item"><div><strong>M249</strong><span>Machine gun</span></div><span class="chip">Heavy</span></li>
+            <li class="weapon-item"><div><strong>Remington 700</strong><span>Sniper rifle</span></div><span class="chip">Precision</span></li>
+            <li class="weapon-item"><div><strong>MP5</strong><span>SMG</span></div><span class="chip">Fast</span></li>
+            <li class="weapon-item"><div><strong>Winchester 94</strong><span>Rifle</span></div><span class="chip">Classic</span></li>
+            <li class="weapon-item"><div><strong>FN SCAR</strong><span>Battle rifle</span></div><span class="chip">Versatile</span></li>
+            <li class="weapon-item"><div><strong>Beretta 92</strong><span>Pistol</span></div><span class="chip">Reliable</span></li>
+            <li class="weapon-item"><div><strong>Barrett M82</strong><span>Anti-materiel</span></div><span class="chip">Power</span></li>
+          </ul>
+        </article>
+
+        <aside class="panel info-box">
+          <h3>Catalog notes</h3>
+          <p>
+            Each item can be replaced with your own weapon names and categories. The layout is deliberately sparse so the section remains easy to customize.
+          </p>
+          <ul class="mini-list">
+            <li>16:9 image slot</li>
+            <li>Stats block below</li>
+            <li>Expandable catalog list</li>
+          </ul>
+        </aside>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const toggleButton = document.getElementById('toggleList');
+    const weaponList = document.getElementById('weaponList');
+
+    toggleButton.addEventListener('click', () => {
+      const expanded = toggleButton.getAttribute('aria-expanded') === 'true';
+      toggleButton.setAttribute('aria-expanded', String(!expanded));
+      toggleButton.textContent = expanded ? 'Show list' : 'Hide list';
+      weaponList.classList.toggle('hidden', expanded);
+    });
+  </script>
+</body>
+</html>
