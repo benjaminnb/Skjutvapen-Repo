@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jämförelser — Skjutvapen Repo</title>
+<style>
+:root{
+  --bg:#0b090b;--panel:#171116;--panel2:#211720;--ink:#f0e8dc;
+  --muted:#aa9da2;--line:#3a2933;--accent:#b58a55;--accent2:#d0ad7a;
+  --blood:#6e2632;--shadow:0 18px 55px rgba(0,0,0,.48)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;color:var(--ink);line-height:1.65;
+  font-family:Georgia,"Times New Roman",serif;
+  background:radial-gradient(circle at 50% -10%,rgba(110,38,50,.2),transparent 38rem),linear-gradient(180deg,var(--bg),#090709)
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;opacity:.07;
+  background-image:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+  background-size:44px 44px
+}
+a{color:inherit;text-decoration:none}
+.container{width:min(1180px,calc(100% - 36px));margin:auto}
+
+.site-header{
+  position:sticky;top:0;z-index:50;background:rgba(11,9,11,.94);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(12px)
+}
+.nav{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{display:flex;align-items:center;gap:12px;font-size:1.15rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.brand-mark{
+  width:36px;height:36px;display:grid;place-items:center;border:1px solid var(--accent);
+  color:var(--accent2);transform:rotate(45deg)
+}
+.brand-mark span{transform:rotate(-45deg)}
+.nav-links{display:flex;gap:24px;color:var(--muted);font-size:.95rem}
+.nav-links a:hover{color:var(--accent2)}
+
+.page-header{padding:72px 0 42px;text-align:center}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:10px;color:var(--accent2);
+  font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;margin-bottom:18px
+}
+.eyebrow:before,.eyebrow:after{content:"";width:34px;height:1px;background:var(--accent)}
+h1{margin:0;font-size:clamp(2.8rem,6vw,5rem);line-height:.95;letter-spacing:-.04em}
+.intro{max-width:650px;margin:22px auto 0;color:var(--muted);font-size:1.05rem}
+.ornament{margin-top:25px;color:var(--accent);letter-spacing:.7em}
+
+.comparison-section{padding:25px 0 100px}
+.comparison-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;align-items:start}
+.comparison-card{position:relative;background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);overflow:visible}
+.card-label{padding:15px 20px;border-bottom:1px solid var(--line);color:var(--accent2);font-size:.76rem;letter-spacing:.18em;text-transform:uppercase}
+
+.weapon-selector{position:relative;z-index:20}
+.select-button{
+  width:100%;min-height:58px;display:flex;align-items:center;justify-content:space-between;
+  gap:16px;padding:15px 20px;border:0;border-bottom:1px solid var(--line);
+  background:#100c10;color:var(--ink);font:inherit;font-size:1rem;text-align:left;cursor:pointer
+}
+.select-button:hover{background:#191218}
+.select-arrow{color:var(--accent);transition:transform .2s}
+.weapon-selector.open .select-arrow{transform:rotate(180deg)}
+
+.weapon-menu{
+  position:absolute;left:0;right:0;top:100%;display:none;max-height:310px;overflow-y:auto;
+  background:#120e12;border:1px solid var(--accent);border-top:0;
+  box-shadow:0 22px 45px rgba(0,0,0,.65)
+}
+.weapon-selector.open .weapon-menu{display:block}
+.weapon-option{
+  width:100%;display:block;padding:13px 18px;border:0;border-bottom:1px solid rgba(58,41,51,.7);
+  background:transparent;color:var(--ink);font:inherit;text-align:left;cursor:pointer
+}
+.weapon-option:last-child{border-bottom:0}
+.weapon-option:hover{background:var(--panel2);color:var(--accent2)}
+
+.image-area{
+  position:relative;aspect-ratio:16/9;overflow:hidden;
+  background:linear-gradient(135deg,rgba(110,38,50,.16),transparent 55%),#0e0a0e
+}
+.image-area img{width:100%;height:100%;display:block;object-fit:cover}
+.image-placeholder{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:#71666b;padding:25px}
+.image-placeholder span{display:block;font-size:.78rem;letter-spacing:.16em;text-transform:uppercase}
+.image-placeholder strong{display:block;margin-top:8px;color:#a09298;font-size:1.2rem}
+
+.weapon-info{padding:19px 20px 22px;border-top:1px solid var(--line)}
+.weapon-info h2{margin:0 0 5px;font-size:1.5rem}
+.weapon-info p{margin:0;color:var(--muted);font-size:.92rem}
+.empty-info{color:#756a70!important;font-style:italic}
+
+.comparison-note{
+  margin:25px 0 0;padding:16px 20px;border-left:2px solid var(--blood);
+  background:rgba(110,38,50,.08);color:var(--muted);font-size:.9rem
+}
+
+@media(max-width:760px){
+  .nav{flex-wrap:wrap;padding:14px 0}
+  .nav-links{order:3;width:100%;justify-content:center;gap:16px;flex-wrap:wrap}
+  .page-header{padding-top:55px}
+  .comparison-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a href="index.html" class="brand" aria-label="Skjutvapen Repo startsida">
+      <span class="brand-mark"><span>✦</span></span>
+      <span>Skjutvapen Repo</span>
+    </a>
+    <nav class="nav-links" aria-label="Huvudnavigation">
+      <a href="index.html">Hem</a>
+      <a href="vapen.html">Vapen</a>
+      <a href="ammunition.html">Ammunition</a>
+      <a href="avfyrningsstatistik.html">Statistik</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="page-header">
+  <div class="container">
+    <div class="eyebrow">Jämförelsearkiv</div>
+    <h1>Jämför två vapen</h1>
+    <p class="intro">
+      Välj ett vapen i vardera listan. Bildytorna är förberedda i 16:9
+      och kan fyllas med dina egna bilder och jämförelsedata.
+    </p>
+    <div class="ornament">✦ · ✦ · ✦</div>
+  </div>
+</section>
+
+<section class="comparison-section">
+<div class="container">
+<div class="comparison-grid">
+
+<!-- Vapen I -->
+<article class="comparison-card">
+  <div class="card-label">Vapen I</div>
+  <div class="weapon-selector">
+    <button class="select-button" type="button" aria-expanded="false">
+      <span class="selected-name">Välj vapen</span>
+      <span class="select-arrow">▼</span>
+    </button>
+    <div class="weapon-menu">
+      <button class="weapon-option" type="button" data-name="Exempelvapen A" data-image="" data-description="Exempelpost för din framtida vapendatabas.">Exempelvapen A</button>
+      <button class="weapon-option" type="button" data-name="Exempelvapen B" data-image="" data-description="Exempelpost för din framtida vapendatabas.">Exempelvapen B</button>
+      <button class="weapon-option" type="button" data-name="Exempelvapen C" data-image="" data-description="Exempelpost för din framtida vapendatabas.">Exempelvapen C</button>
+      <button class="weapon-option" type="button" data-name="Exempelvapen D" data-image="" data-description="Exempelpost för din framtida vapendatabas.">Exempelvapen D</button>
+      <button class="weapon-option" type="button" data-name="Exempelvapen E" data-image="" data-description="Exempelpost för din framtida vapendatabas.">Exempelvapen E</button>
+    </div>
+  </div>
+  <div class="image-area">
+    <div class="image-placeholder"><div><span>16 : 9 · Bildyta</span><strong>Välj ett vapen ovan</strong></div></div>
+    <img class="weapon-image" src="" alt="" hidden>
+  </div>
+  <div class="weapon-info">
+    <h2 class="weapon-title">Inget vapen valt</h2>
+    <p class="weapon-description empty-info">Välj ett vapen från listan för att visa information här.</p>
+  </div>
+</article>
+
+<!-- Vapen II -->
+<article class="comparison-card">
+  <div class="card-label">Vapen II</div>
+  <div class="weapon-selector">
+    <button class="select-button" type="button" aria-expanded="false">
+      <span class="selected-name">Välj vapen</span>
+      <span class="select-arrow">▼</span>
+    </button>
+    <div class="weapon-menu">
+      <button class="weapon-option" type="button" data-name="Exempelvapen A" data-image="" data-description="Exempelpost för din framtida vapendatabas.">Exempelvapen A</button>
+      <button class="weapon-option" type="button" data-name="Exempelvapen B" data-image="" data-description="Exempelpost för din framtida vapendatabas.">Exempelvapen B</button>
+      <button class="weapon-option" type="button" data-name="Exempelvapen C" data-image="" data-description="Exempelpost för din framtida vapendatabas.">Exempelvapen C</button>
+      <button class="weapon-option" type="button" data-name="Exempelvapen D" data-image="" data-description="Exempelpost för din framtida vapendatabas.">Exempelvapen D</button>
+      <button class="weapon-option" type="button" data-name="Exempelvapen E" data-image="" data-description="Exempelpost för din framtida vapendatabas.">Exempelvapen E</button>
+    </div>
+  </div>
+  <div class="image-area">
+    <div class="image-placeholder"><div><span>16 : 9 · Bildyta</span><strong>Välj ett vapen ovan</strong></div></div>
+    <img class="weapon-image" src="" alt="" hidden>
+  </div>
+  <div class="weapon-info">
+    <h2 class="weapon-title">Inget vapen valt</h2>
+    <p class="weapon-description empty-info">Välj ett vapen från listan för att visa information här.</p>
+  </div>
+</article>
+
+</div>
+
+<div class="comparison-note">
+  Bildytorna är 16:9. Byt exempelposterna mot dina egna poster och ange respektive bildfil i
+  <code>data-image</code>.
+</div>
+</div>
+</section>
+</main>
+
+<script>
+const selectors = document.querySelectorAll(".weapon-selector");
+
+selectors.forEach(selector => {
+  const button = selector.querySelector(".select-button");
+
+  button.addEventListener("click", event => {
+    event.stopPropagation();
+
+    selectors.forEach(other => {
+      if (other !== selector) {
+        other.classList.remove("open");
+        other.querySelector(".select-button").setAttribute("aria-expanded","false");
+      }
+    });
+
+    const isOpen = selector.classList.toggle("open");
+    button.setAttribute("aria-expanded", String(isOpen));
+  });
+
+  selector.querySelectorAll(".weapon-option").forEach(option => {
+    option.addEventListener("click", () => {
+      const card = selector.closest(".comparison-card");
+      const name = option.dataset.name;
+      const image = option.dataset.image;
+      const description = option.dataset.description;
+
+      const selectedName = selector.querySelector(".selected-name");
+      const title = card.querySelector(".weapon-title");
+      const text = card.querySelector(".weapon-description");
+      const imageElement = card.querySelector(".weapon-image");
+      const placeholder = card.querySelector(".image-placeholder");
+
+      selectedName.textContent = name;
+      title.textContent = name;
+      text.textContent = description;
+      text.classList.remove("empty-info");
+
+      if (image) {
+        imageElement.src = image;
+        imageElement.alt = name;
+        imageElement.hidden = false;
+        placeholder.style.display = "none";
+      } else {
+        imageElement.hidden = true;
+        imageElement.removeAttribute("src");
+        placeholder.style.display = "grid";
+      }
+
+      selector.classList.remove("open");
+      button.setAttribute("aria-expanded","false");
+    });
+  });
+});
+
+document.addEventListener("click", () => {
+  selectors.forEach(selector => {
+    selector.classList.remove("open");
+    selector.querySelector(".select-button").setAttribute("aria-expanded","false");
+  });
+});
+
+selectors.forEach(selector => {
+  selector.addEventListener("click", event => event.stopPropagation());
+});
+</script>
+</body>
+</html>
